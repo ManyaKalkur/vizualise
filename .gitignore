@@ -1,2 +1,5 @@
 /node_modules
 /venv
+/frontend/node_modules
+/backend/venv
+*.pyc
