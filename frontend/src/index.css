@@ -1,0 +1,196 @@
+:root {
+  --bg-main: #f4fbff;
+  --bg-sidebar: #eaf6ff;
+  --accent: #4fa8d8;
+  --accent-dark: #2f7ea8;
+  --border: #cfe9f7;
+  --text: #1f3b4d;
+  --text-light: #5c7a8a;
+  --panel-bg: #ffffff;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  background: var(--bg-main);
+  color: var(--text);
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+}
+.sidebar h1 {
+  font-size: 20px;
+  margin: 0 0 4px 0;
+  color: var(--accent-dark);
+}
+.sidebar .tagline {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-dark);
+  margin-bottom: 8px;
+}
+
+.radio-row {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+select, button {
+  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:disabled {
+  background: #b9d8e8;
+  cursor: not-allowed;
+}
+button.secondary {
+  background: white;
+  color: var(--accent-dark);
+  border: 1px solid var(--accent);
+}
+
+.city-list {
+  max-height: 180px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+}
+.city-list label {
+  display: block;
+  font-size: 12px;
+  padding: 2px 0;
+}
+
+.possible-tours {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 6px;
+}
+.possible-tours b {
+  color: var(--accent-dark);
+}
+
+.panel-config {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-area {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-map {
+  flex: 1;
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.results-grid {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.back-button-row {
+  padding: 0 16px 16px 16px;
+}
+
+.results-grid {
+  display: grid;
+  gap: 12px;
+}
+.result-panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--panel-bg);
+}
+.result-header {
+  background: var(--bg-sidebar);
+  padding: 8px 12px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.result-header .algo-name {
+  font-weight: 700;
+}
+
+.stat-chip {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2px 8px;
+  margin-left: 4px;
+  font-size: 11px;
+}
+
+.view-toggle button {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+.max-reached {
+  font-size: 11px;
+  color: #c0392b;
+  margin-top: 4px;
+}
