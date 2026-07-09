@@ -5,7 +5,7 @@ import ResultPanel from '../components/ResultPanel.jsx'
 import {useTSPRun} from '../api/tspWebsocket.js'
 import {possibleTours} from '../utils.js'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = 'https://vizualise.onrender.com/'
 
 export default function TSPApp({ onBack }) {
   const [scope,setScope]= useState('national')

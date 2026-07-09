@@ -1,6 +1,6 @@
 import {useCallback,useRef,useState} from 'react'
 
-const WS_URL= 'wss://vizualise.onrender.com/ws/run'
+const WS_URL= 'wss://vizualise.onrender.com/'
 export function useTSPRun() {
   const [results,setResults]= useState({})
   const [running,setRunning]= useState(false)
