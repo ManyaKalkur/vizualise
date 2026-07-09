@@ -4,7 +4,7 @@ import KnapsackOverview from '../components/KnapsackOverview.jsx'
 import KnapsackResultPanel from '../components/KnapsackResultPanel.jsx'
 import { useKnapsackRun } from '../api/knapsackWebsocket.js'
 
-const API_BASE='https://vizualise.onrender.com/'
+const API_BASE='https://vizualise.onrender.com'
 const MAX_CAPACITY= 50
 
 export default function KnapsackApp({onBack}) {

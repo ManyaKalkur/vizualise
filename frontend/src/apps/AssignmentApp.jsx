@@ -4,7 +4,7 @@ import AssignmentOverview from '../components/AssignmentOverview.jsx'
 import AssignmentResultPanel from '../components/AssignmentResultPanel.jsx'
 import { useAssignmentRun } from '../api/assignmentWebsocket.js'
 
-const API_BASE= 'https://vizualise.onrender.com/'
+const API_BASE= 'https://vizualise.onrender.com'
 const MAX_SIZE= 8
 
 export default function AssignmentApp({ onBack }) {

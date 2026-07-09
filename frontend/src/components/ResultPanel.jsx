@@ -15,7 +15,7 @@ const ALGO_COLORS= {
   brute_force: '#8338ec',
   branch_and_bound: '#ff006e',
 }
-const API_BASE = 'https://vizualise.onrender.com/'
+const API_BASE = 'https://vizualise.onrender.com'
 
 export default function ResultPanel({ algo,cities,cityLookup,result }) {
   const [view, setView]= useState('map')

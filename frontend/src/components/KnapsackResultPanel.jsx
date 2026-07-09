@@ -1,7 +1,7 @@
 import React, {useMemo,useState} from 'react'
 import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip as ChartTooltip,ResponsiveContainer } from 'recharts'
 
-const API_BASE= 'https://vizualise.onrender.com/'
+const API_BASE= 'https://vizualise.onrender.com'
 
 const ALGO_COLORS= {
   fractional_knapsack:'#f4a261',
