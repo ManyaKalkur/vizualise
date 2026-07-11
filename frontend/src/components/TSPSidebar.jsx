@@ -22,6 +22,8 @@ export default function Sidebar({
   cities,
   selectedCityIds,
   toggleCity,
+  selectAllCities,
+  deselectAllCities,
   startId,
   setStartId,
   panelAlgos,
