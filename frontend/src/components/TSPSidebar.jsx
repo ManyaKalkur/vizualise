@@ -11,7 +11,6 @@ const MAX_PANELS= 4
 const ALGO_CAPS= {
   brute_force:10,
   branch_and_bound:15,
-  branch_and_bound_intersections:15,
 }
 
 export default function Sidebar({
@@ -55,6 +54,10 @@ export default function Sidebar({
       </div>
       <div className="section">
         <div className="section-label">2. Cities ({selectedCityIds.length}/{cities.length})</div>
+        <div style={{display:'flex',gap:6,marginBottom:6}}>
+          <button className="secondary" onClick={selectAllCities} style={{flex:1}}>Select all</button>
+          <button className="secondary" onClick={deselectAllCities} style={{flex:1}}>Deselect all</button>
+        </div>
         <div className="city-list">
           {cities.length === 0 && <div style={{fontSize: 12,color: '#5c7a8a'}}>No cities loaded yet.</div>}
           {cities.map((c)=> (
