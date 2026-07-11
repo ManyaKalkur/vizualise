@@ -50,6 +50,8 @@ export default function TSPApp({ onBack }) {
   const toggleCity= (id)=> {
     setSelectedCityIds((prev)=> (prev.includes(id)? prev.filter((x)=> x !== id): [...prev, id]))
   }
+  const selectAllCities= ()=> setSelectedCityIds(cities.map((c)=> c.id))
+  const deselectAllCities= ()=> setSelectedCityIds([])
   useEffect(()=> {
     if (selectedCityIds.length && !selectedCityIds.includes(startId)) {
       setStartId(selectedCityIds[0])
