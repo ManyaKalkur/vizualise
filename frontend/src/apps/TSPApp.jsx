@@ -15,6 +15,7 @@ export default function TSPApp({ onBack }) {
   const [selectedCityIds,setSelectedCityIds]= useState([])
   const [startId,setStartId]= useState('')
   const [panelAlgos,setPanelAlgos]= useState(['nearest_neighbor'])
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const {results,running,runAll,reset}= useTSPRun()
   const hasResults= Object.keys(results).length>0
   useEffect(()=> {
