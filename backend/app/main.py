@@ -15,7 +15,7 @@ from . import assignment_algorithms as assignment_module
 app= FastAPI(title="Visualizer API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origins=r"https://.*\.vercel\.app",
     allow_methods=["*"],
     allow_headers=["*"],
 )
