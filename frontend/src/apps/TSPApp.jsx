@@ -15,6 +15,7 @@ export default function TSPApp({ onBack }) {
   const [selectedCityIds,setSelectedCityIds]= useState([])
   const [startId,setStartId]= useState('')
   const [panelAlgos,setPanelAlgos]= useState(['nearest_neighbor'])
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const {results,running,runAll,reset}= useTSPRun()
   const hasResults= Object.keys(results).length>0
   useEffect(()=> {
@@ -49,6 +50,8 @@ export default function TSPApp({ onBack }) {
   const toggleCity= (id)=> {
     setSelectedCityIds((prev)=> (prev.includes(id)? prev.filter((x)=> x !== id): [...prev, id]))
   }
+  const selectAllCities= ()=> setSelectedCityIds(cities.map((c)=> c.id))
+  const deselectAllCities= ()=> setSelectedCityIds([])
   useEffect(()=> {
     if (selectedCityIds.length && !selectedCityIds.includes(startId)) {
       setStartId(selectedCityIds[0])
@@ -81,6 +84,7 @@ export default function TSPApp({ onBack }) {
 
   return (
     <div className="layout">
+      <button className="menu-toggle secondary" onClick={()=> setSidebarOpen(true)}>☰ Menu</button>
       {onBack && (
         <button
           className="secondary"
@@ -90,16 +94,19 @@ export default function TSPApp({ onBack }) {
           All visualizers
         </button>
       )}
-      <Sidebar
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={()=> setSidebarOpen(false)}/>}
+      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}>
+        <Sidebar
         scope={scope} setScope={setScope}
         states={states} selectedState={selectedState} setSelectedState={setSelectedState}
         cities={cities} selectedCityIds={selectedCityIds} toggleCity={toggleCity}
+        selectAllCities={selectAllCities} deselectAllCities={deselectAllCities}
         startId={startId} setStartId={setStartId}
         panelAlgos={panelAlgos} setPanelAlgo={setPanelAlgo}
         addComparePanel={addComparePanel} removeLastPanel={removeLastPanel}
         running={running} onRun={handleRun}
       />
-
+      </div> 
       <div className="main-area">
         {!hasResults? (
           <OverviewMap cities={selectedCities}/>
