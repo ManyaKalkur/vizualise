@@ -78,7 +78,7 @@ export default function KnapsackApp({onBack}) {
         </button>
       )}
       {sidebarOpen && <div className="sidebar-backdrop" onClick={()=> setSidebarOpen(false)}/>}
-      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}></div>
+      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}>
       <KnapsackSidebar
         presets={presets} preset={preset} setPreset={setPreset}
         items={items} selectedItemIds={selectedItemIds} toggleItem={toggleItem}
@@ -88,6 +88,7 @@ export default function KnapsackApp({onBack}) {
         addComparePanel={addComparePanel} removeLastPanel={removeLastPanel}
         running={running} onRun={handleRun}
       />
+      </div>
       <div className="main-area">
         {!hasResults ? (
           <KnapsackOverview items={selectedItems}/>
