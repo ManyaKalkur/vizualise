@@ -14,7 +14,7 @@ export default function KnapsackApp({onBack}) {
   const [selectedItemIds, setSelectedItemIds]= useState([])
   const [capacity, setCapacity]= useState(15)
   const [panelAlgos, setPanelAlgos]= useState(['zero_one_dp'])
-
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const { results, running, runAll, reset }=useKnapsackRun()
   const hasResults= Object.keys(results).length>0
 
@@ -36,6 +36,8 @@ export default function KnapsackApp({onBack}) {
   const toggleItem= (id)=> {
     setSelectedItemIds((prev)=> (prev.includes(id)? prev.filter((x)=>x!== id):[...prev, id]))
   }
+  const selectAllItems= ()=> setSelectedItemIds(items.map((it)=> it.id))
+  const deselectAllItems= ()=> setSelectedItemIds([])
   const setPanelAlgo= (i, algo)=> {
     setPanelAlgos((prev)=> {
       const next= [...prev]
@@ -60,6 +62,7 @@ export default function KnapsackApp({onBack}) {
   const gridCols= panelAlgos.length=== 1?1:panelAlgos.length ===2?2:panelAlgos.length===3?3:2
   return (
     <div className="layout">
+      <button className="menu-toggle secondary" onClick={()=> setSidebarOpen(true)}>☰ Menu</button>
       {onBack && (
         <button
           className="secondary"
@@ -74,9 +77,12 @@ export default function KnapsackApp({onBack}) {
           All visualizers
         </button>
       )}
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={()=> setSidebarOpen(false)}/>}
+      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}></div>
       <KnapsackSidebar
         presets={presets} preset={preset} setPreset={setPreset}
         items={items} selectedItemIds={selectedItemIds} toggleItem={toggleItem}
+        selectAllItems={selectAllItems} deselectAllItems={deselectAllItems}
         capacity={capacity} setCapacity={setCapacity} maxCapacity={MAX_CAPACITY}
         panelAlgos={panelAlgos} setPanelAlgo={setPanelAlgo}
         addComparePanel={addComparePanel} removeLastPanel={removeLastPanel}

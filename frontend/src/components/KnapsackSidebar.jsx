@@ -11,6 +11,8 @@ export default function KnapsackSidebar({
   items,
   selectedItemIds,
   toggleItem,
+  selectAllItems,
+  deselectAllItems,
   capacity,
   setCapacity,
   maxCapacity,
@@ -37,6 +39,10 @@ export default function KnapsackSidebar({
       </div>
       <div className="section">
         <div className="section-label">2. Items ({selectedItemIds.length}/{items.length})</div>
+        <div style={{display:'flex',gap:6,marginBottom:6}}>
+          <button className="secondary" onClick={selectAllItems} style={{flex:1}}>Select all</button>
+          <button className="secondary" onClick={deselectAllItems} style={{flex:1}}>Deselect all</button>
+        </div>
         <div className="city-list">
           {items.map((it)=> (
             <label key={it.id}>
