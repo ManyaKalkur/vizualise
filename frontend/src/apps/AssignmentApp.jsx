@@ -13,6 +13,7 @@ export default function AssignmentApp({ onBack }) {
   const [size, setSize]= useState(6)
   const [data, setData]= useState({workers:[], jobs:[], cost_matrix:[]})
   const [panelAlgos, setPanelAlgos]= useState(['hungarian_algorithm'])
+  const [sidebarOpen, setSidebarOpen]= useState(false)
   const { results, running, runAll, reset }= useAssignmentRun()
   const hasResults= Object.keys(results).length>0
   useEffect(()=> {
@@ -50,6 +51,7 @@ export default function AssignmentApp({ onBack }) {
   const gridCols= panelAlgos.length=== 1?1: panelAlgos.length=== 2?2:panelAlgos.length === 3?3:2
   return (
     <div className="layout">
+      <button className="menu-toggle secondary" onClick={()=> setSidebarOpen(true)}>☰ Menu</button>
       {onBack && (
         <button className="secondary" onClick={onBack} style={{
           position: 'fixed',
@@ -60,13 +62,15 @@ export default function AssignmentApp({ onBack }) {
           All visualizers
         </button>
       )}
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={()=> setSidebarOpen(false)}/>}
+      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}>
       <AssignmentSidebar
         presets={presets} preset={preset} setPreset={setPreset}
         size={size} setSize={setSize} maxSize={MAX_SIZE}
         panelAlgos={panelAlgos} setPanelAlgo={setPanelAlgo}
         addComparePanel={addComparePanel} removeLastPanel={removeLastPanel}
         running={running} onRun={handleRun}
-      />
+      /></div>
       <div className="main-area">
         {!hasResults ? (
           <AssignmentOverview workers={data.workers} jobs={data.jobs} costMatrix={data.cost_matrix}/>
