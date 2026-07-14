@@ -63,14 +63,14 @@ export default function AssignmentApp({ onBack }) {
         </button>
       )}
       {sidebarOpen && <div className="sidebar-backdrop" onClick={()=> setSidebarOpen(false)}/>}
-      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}></div>
+      <div className={`sidebar-wrapper ${sidebarOpen? 'open':''}`}>
       <AssignmentSidebar
         presets={presets} preset={preset} setPreset={setPreset}
         size={size} setSize={setSize} maxSize={MAX_SIZE}
         panelAlgos={panelAlgos} setPanelAlgo={setPanelAlgo}
         addComparePanel={addComparePanel} removeLastPanel={removeLastPanel}
         running={running} onRun={handleRun}
-      />
+      /></div>
       <div className="main-area">
         {!hasResults ? (
           <AssignmentOverview workers={data.workers} jobs={data.jobs} costMatrix={data.cost_matrix}/>
