@@ -33,6 +33,8 @@ body {
   border-right: 1px solid var(--border);
   padding: 20px;
   overflow-y: auto;
+  height: 100%;
+  overflow-x: hidden;
 }
 .sidebar h1 {
   font-size: 20px;
@@ -43,6 +45,9 @@ body {
   font-size: 13px;
   color: var(--text-light);
   margin-bottom: 20px;
+}
+.sidebar-wrapper {
+    height: 100vh;
 }
 
 .section {
