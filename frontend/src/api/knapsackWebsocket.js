@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
-const WS_URL= 'wss://vizualise.onrender.com'
+const WS_URL= 'wss://vizualise.onrender.com/ws/knapsack/run'
 export function useKnapsackRun() {
   const [results, setResults]= useState({})
   const [running, setRunning]= useState(false)
