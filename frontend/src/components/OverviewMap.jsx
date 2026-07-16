@@ -20,7 +20,7 @@ export default function OverviewMap({cities}) {
   return (
     <div className="overview-map">
       <MapContainer center={center} zoom={cities.length?5:4} style={{ height:'100%',width:'100%'}}zoomControl={false}>
-        <ZoomControl position="bottomleft"/>
+        <ZoomControl position="bottomright"/>
         <RecenterOnChange center={center} zoom={cities.length?5:4}/>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
