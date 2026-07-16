@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import {MapContainer,TileLayer,CircleMarker,Tooltip,useMap} from 'react-leaflet'
+import {MapContainer,TileLayer,CircleMarker,Tooltip,useMap,ZoomControl} from 'react-leaflet'
 
 function RecenterOnChange({center,zoom}) {
   const map= useMap()
@@ -19,7 +19,8 @@ export default function OverviewMap({cities}) {
 
   return (
     <div className="overview-map">
-      <MapContainer center={center} zoom={cities.length?5:4} style={{ height:'100%',width:'100%'}}>
+      <MapContainer center={center} zoom={cities.length?5:4} style={{ height:'100%',width:'100%'}}zoomControl={false}>
+        <ZoomControl position="topright"/>
         <RecenterOnChange center={center} zoom={cities.length?5:4}/>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
