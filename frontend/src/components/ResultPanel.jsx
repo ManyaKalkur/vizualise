@@ -1,5 +1,5 @@
 import React, {useMemo,useState} from 'react'
-import {MapContainer,TileLayer,Polyline,CircleMarker,Tooltip,useMap} from 'react-leaflet'
+import {MapContainer,TileLayer,Polyline,CircleMarker,Tooltip,useMap,ZoomControl} from 'react-leaflet'
 import {useEffect} from 'react'
 import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip as ChartTooltip,ResponsiveContainer} from 'recharts'
 
@@ -127,7 +127,8 @@ export default function ResultPanel({ algo,cities,cityLookup,result }) {
         </div>
       )}
       {view === 'map'?(
-        <MapContainer center={center} zoom={5} style={{height:300, width:'100%'}}>
+        <MapContainer center={center} zoom={5} style={{height:300, width:'100%'}}zoomControl={false}>
+          <ZoomControl position="bottomright"/>
           <RecenterOnChange center={center} zoom={5}/>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
