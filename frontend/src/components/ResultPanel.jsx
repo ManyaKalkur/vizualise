@@ -128,7 +128,7 @@ export default function ResultPanel({ algo,cities,cityLookup,result }) {
       )}
       {view === 'map'?(
         <MapContainer center={center} zoom={5} style={{height:300, width:'100%'}}zoomControl={false}>
-          <ZoomControl position="topright"/>
+          <ZoomControl position="bottomleft"/>
           <RecenterOnChange center={center} zoom={5}/>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
