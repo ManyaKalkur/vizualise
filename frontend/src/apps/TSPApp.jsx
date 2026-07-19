@@ -121,6 +121,7 @@ export default function TSPApp({ onBack }) {
                   cities={selectedCities}
                   cityLookup={cityLookup}
                   result={results[runId]}
+                  startId={startId}
                 />
               )
             })}

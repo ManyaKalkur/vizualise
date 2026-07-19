@@ -64,7 +64,7 @@ def segments_intersect(a, b, c, d):
     o3, o4= orient(c, d, a), orient(c, d, b)
     return o1 != o2 and o3 != o4
 
-def nearest_neighbor(cities, dist, start_idx=0):
+def nearest_neighbor(cities, dist, start_idx=0, trace=False):
     n= len(cities)
     visited= [False]*n
     tour= [start_idx]
@@ -74,12 +74,17 @@ def nearest_neighbor(cities, dist, start_idx=0):
     while len(tour)<n:
         cur= tour[-1]
         nearest, nearest_d= None, float("inf")
+        candidates= []
         for j in range(n):
-            if not visited[j] and dist[cur][j]<nearest_d:
-                nearest, nearest_d= j, dist[cur][j]
+            if not visited[j]:
+                candidates.append({"city": cities[j]["id"], "distance": round(dist[cur][j], 1)})
+                if dist[cur][j]<nearest_d:
+                    nearest, nearest_d= j, dist[cur][j]
+        if trace:
+            yield {"type": "candidates", "tour": tour[:], "candidates": candidates, "chosen": cities[nearest]["id"], "step_no": step_no}
         tour.append(nearest)
         visited[nearest]= True
-        step_no+=1
+        step_no+= 1
         yield {
             "type": "step",
             "tour": tour[:],
@@ -88,7 +93,7 @@ def nearest_neighbor(cities, dist, start_idx=0):
         }
     yield {"type": "done", "tour": tour[:], "distance": tour_length(tour, dist), "step_no": step_no+1}
 
-def random_paths(cities, dist, start_idx=0, num_samples=2000, seed=3):
+def random_paths(cities, dist, start_idx=0, num_samples=2000, seed=3, trace=False, trace_samples=150):
     """Generate random permutations, keep the best seen. A baseline to show
     how much smarter the other algorithms are; include for comparison."""
     n= len(cities)
@@ -102,17 +107,25 @@ def random_paths(cities, dist, start_idx=0, num_samples=2000, seed=3):
         candidate= [start_idx]+candidate_others
         length= tour_length(candidate, dist)
         step_no+= 1
-        if length<best_len:
+        is_best= length<best_len
+        if trace and _<trace_samples:
+            yield {"type": "leaf", "tour": candidate[:], "distance": round(length, 1), "step_no": step_no, "is_best": is_best}
+            if _ == trace_samples-1:
+                yield {"type": "leaf", "tour": candidate[:], "distance": round(length, 1), "step_no": step_no,
+                       "is_best": False,
+                       "note": f"trace preview limited to first {trace_samples} samples-algorithm continues silently to real completion"}
+        if is_best:
             best_tour, best_len = candidate, length
             yield {"type": "step", "tour": best_tour[:], "distance": best_len, "step_no": step_no}
     yield {"type": "done", "tour": best_tour[:], "distance": best_len, "step_no": step_no+1}
 
-def brute_force(cities, dist, start_idx=0, max_cities=10):
+def brute_force(cities, dist, start_idx=0, max_cities=10, trace=False, trace_max_cities=7):
     """Only safe for small n (<= ~10); true exhaustive search."""
     n= len(cities)
-    if n>max_cities:
-        yield {"type": "done", "tour": [], "distance": -1, "step_no": 0,
-               "error": f"Brute force capped at {max_cities} cities (got {n})."}
+    cap= trace_max_cities if trace else max_cities
+    if n>cap:
+        label= "Trace mode" if trace else "Brute force"
+        yield {"type": "done", "tour": [], "distance": -1, "step_no": 0, "error": f"{label} capped at {cap} cities (got {n})."}
         return
     others= [i for i in range(n) if i != start_idx]
     best_tour, best_len= None, float("inf")
@@ -121,12 +134,15 @@ def brute_force(cities, dist, start_idx=0, max_cities=10):
         candidate= [start_idx]+list(perm)
         length= tour_length(candidate, dist)
         step_no+= 1
-        if length<best_len:
+        is_best= length<best_len
+        if trace:
+            yield {"type": "leaf", "tour": candidate[:], "distance": round(length, 1),"step_no": step_no, "is_best": is_best}
+        if is_best:
             best_tour, best_len= candidate, length
             yield {"type": "step", "tour": best_tour[:], "distance": best_len, "step_no": step_no}
     yield {"type": "done", "tour": best_tour[:], "distance": best_len, "step_no": step_no+1}
 
-def branch_and_bound(cities, dist, start_idx=0, max_cities=15):
+def branch_and_bound(cities, dist, start_idx=0, max_cities=15, trace=False):
     """Classic B&B with a simple lower bound; maintains current best throughout."""
     n= len(cities)
     if n>max_cities:
@@ -143,31 +159,25 @@ def branch_and_bound(cities, dist, start_idx=0, max_cities=15):
         if remaining:
             total+= min(dist[last][r] for r in remaining)
         return total
-    def dfs(path, visited_mask):
-        nonlocal best_tour, best_len, step_no
-        if len(path)== n:
-            length= tour_length(path, dist)
-            step_no+=1
-            if length<best_len:
-                best_tour, best_len= path[:], length
-                return True
-            return False
-        for nxt in range(n):
-            if (visited_mask>>nxt)&1:
-                continue
-            new_path= path+[nxt]
-            new_mask= visited_mask|(1<<nxt)
-            if bound(new_path, new_mask)<best_len:
-                dfs(new_path, new_mask)
     stack= [([start_idx],1<<start_idx)]
     while stack:
         path, mask= stack.pop()
+        step_no+= 1
+        if trace:
+            yield {"type": "explore", "tour": path[:], "step_no": step_no}
         if len(path)== n:
             length= tour_length(path, dist)
-            step_no+= 1
-            if length<best_len:
+            is_best= length<best_len
+            if trace:
+                yield {"type": "leaf", "tour": path[:], "distance": round(length, 1),"step_no": step_no, "is_best": is_best}
+            if is_best:
                 best_tour, best_len= path[:], length
                 yield {"type": "step", "tour": best_tour[:], "distance": best_len, "step_no": step_no}
+            continue
+        b= bound(path, mask)
+        if b>=best_len:
+            if trace:
+                yield {"type": "prune", "tour": path[:], "step_no": step_no, "bound": round(b, 1)}
             continue
         for nxt in range(n):
             if (mask>>nxt) & 1:
