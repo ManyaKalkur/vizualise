@@ -2,6 +2,7 @@ import React, {useMemo,useState} from 'react'
 import {MapContainer,TileLayer,Polyline,CircleMarker,Tooltip,useMap,ZoomControl} from 'react-leaflet'
 import {useEffect} from 'react'
 import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip as ChartTooltip,ResponsiveContainer} from 'recharts'
+import TraceModal from './TraceModal.jsx'
 
 function RecenterOnChange({center,zoom}) {
   const map= useMap()
@@ -11,18 +12,20 @@ function RecenterOnChange({center,zoom}) {
   return null
 }
 
+const TRACE_CAPABLE= new Set(['nearest_neighbor', 'brute_force', 'branch_and_bound'])
 const ALGO_COLORS= {
   brute_force: '#8338ec',
   branch_and_bound: '#ff006e',
 }
 const API_BASE = 'https://vizualise.onrender.com'
 
-export default function ResultPanel({ algo,cities,cityLookup,result }) {
+export default function ResultPanel({ algo,cities,cityLookup,result,startId}) {
   const [view, setView]= useState('map')
   const [xMode, setXMode]= useState('time')
   const [showCode, setShowCode]= useState(false)
   const [code, setCode]= useState('')
   const [codeLoading, setCodeLoading]= useState(false)
+  const [showTrace, setShowTrace] = useState(false)
   const color= ALGO_COLORS[algo] || '#333'
   const openCode= ()=> {
     setShowCode(true)
@@ -69,8 +72,11 @@ export default function ResultPanel({ algo,cities,cityLookup,result }) {
           <button className={view=== 'map'?'':'secondary'} onClick={()=> setView('map')}>Map</button>{' '}
           <button className={view=== 'graph'?'':'secondary'} onClick={()=>setView('graph')}>Graph</button>{' '}
           <button className="secondary" onClick={openCode}>{'</>'} Code</button>
+          {TRACE_CAPABLE.has(algo) && (
+          <button className="secondary" onClick={()=> setShowTrace(true)}>Trace</button>)}
         </span>
       </div>
+      {showTrace && (<TraceModal algo={algo} cities={cities} cityLookup={cityLookup} startId={startId} onClose={()=> setShowTrace(false)}/>)}
 
       {result?.status=== 'error' && (
         <div style={{padding:'4px 12px', fontSize:11, color:'#c0392b'}}>

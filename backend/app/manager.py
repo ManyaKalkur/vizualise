@@ -2,10 +2,14 @@ import asyncio
 import time
 from .algorithms import ALGORITHMS, build_distance_matrix, num_possible_tours
 
-async def run_algorithm_stream(websocket,run_id:str,algo_name:str,cities:list,start_idx:int):
+TRACE_CAPABLE = {"nearest_neighbor", "brute_force", "branch_and_bound"}
+async def run_algorithm_stream(websocket, run_id: str, algo_name: str, cities: list, start_idx: int, trace: bool = False):
     dist= build_distance_matrix(cities)
     gen_fn= ALGORITHMS[algo_name]
-    generator= gen_fn(cities,dist,start_idx=start_idx)
+    kwargs= {"start_idx": start_idx}
+    if trace and algo_name in TRACE_CAPABLE:
+        kwargs["trace"]= True
+    generator = gen_fn(cities, dist, **kwargs)
     t0= time.perf_counter()
     for step in generator:
         elapsed_ms= (time.perf_counter()-t0)*1000
@@ -50,7 +54,7 @@ async def run_multiple(websocket,requests:list,cities_by_id:dict):
         })
         tasks.append(
             asyncio.create_task(
-                run_algorithm_stream(websocket,req["run_id"],req["algo"],cities,start_idx)
+                run_algorithm_stream(websocket,req["run_id"],req["algo"],cities,start_idx,trace=req.get("trace", False))
             )
         )
     await asyncio.gather(*tasks)
