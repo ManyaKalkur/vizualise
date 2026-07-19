@@ -3,7 +3,9 @@ import Landing from './Landing.jsx'
 import TSPApp from './apps/TSPApp.jsx'
 import KnapsackApp from './apps/KnapsackApp.jsx'
 import AssignmentApp from './apps/AssignmentApp.jsx'
+import LoadingScreen from './components/LoadingScreen.jsx'
 
+const API_BASE= 'https://vizualise.onrender.com'
 const VALID_PAGES= ['tsp','knapsack','assignment']
 function getPageFromHash() {
   const h = window.location.hash.replace('#/', '')
@@ -11,6 +13,25 @@ function getPageFromHash() {
 }
 export default function App() {
   const [page, setPage]= useState(getPageFromHash())
+  const [backendReady, setBackendReady]= useState(false)
+  const [seconds, setSeconds]= useState(0)
+  useEffect(()=> {
+  let cancelled= false
+  const startedAt= Date.now()
+  const check= ()=> {
+  fetch(`${API_BASE}/api/cities/national`)
+    .then(()=> { if (!cancelled) setBackendReady(true) })
+    .catch(()=> {
+        if (!cancelled) setTimeout(check, 3000)
+    })
+  }
+  check()
+  const tick= setInterval(()=> {
+    if (!cancelled) setSeconds(Math.floor((Date.now()-startedAt)/1000))
+    }, 1000)
+  return ()=> {cancelled= true;clearInterval(tick)}
+  }, [])
+  if (!backendReady) return <LoadingScreen seconds={seconds}/>
   useEffect(()=> {
     window.location.hash= page=== 'landing'? '':`/${page}`},[page])
   useEffect(()=> {
