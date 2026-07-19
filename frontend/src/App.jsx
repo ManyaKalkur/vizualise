@@ -15,32 +15,42 @@ export default function App() {
   const [page, setPage]= useState(getPageFromHash())
   const [backendReady, setBackendReady]= useState(false)
   const [seconds, setSeconds]= useState(0)
-  useEffect(()=> {
-  let cancelled= false
-  const startedAt= Date.now()
-  const check= ()=> {
-  fetch(`${API_BASE}/api/cities/national`)
-    .then(()=> { if (!cancelled) setBackendReady(true) })
-    .catch(()=> {
-        if (!cancelled) setTimeout(check, 3000)
-    })
-  }
-  check()
-  const tick= setInterval(()=> {
-    if (!cancelled) setSeconds(Math.floor((Date.now()-startedAt)/1000))
+  useEffect(() => {
+    let cancelled= false
+    const startedAt= Date.now()
+    const check= ()=> {
+      fetch(`${API_BASE}/api/cities/national`)
+        .then((res)=> {
+          if (!res.ok) throw new Error()
+          if (!cancelled) setBackendReady(true)
+        })
+        .catch(()=> {
+          if (!cancelled) setTimeout(check, 3000)
+        })
+    }
+    check()
+    const tick= setInterval(()=> {
+      if (!cancelled)
+        setSeconds(Math.floor((Date.now()-startedAt)/1000))
     }, 1000)
-  return ()=> {cancelled= true;clearInterval(tick)}
+    return ()=> {
+      cancelled= true
+      clearInterval(tick)
+    }
   }, [])
-  if (!backendReady) return <LoadingScreen seconds={seconds}/>
   useEffect(()=> {
-    window.location.hash= page=== 'landing'? '':`/${page}`},[page])
+    window.location.hash= page=== "landing"?"":`/${page}`
+  }, [page])
   useEffect(()=> {
     const onHashChange= ()=> setPage(getPageFromHash())
-    window.addEventListener('hashchange', onHashChange)
-    return ()=> window.removeEventListener('hashchange', onHashChange)
+    window.addEventListener("hashchange", onHashChange)
+    return ()=>
+      window.removeEventListener("hashchange", onHashChange)
   }, [])
-  if (page=== 'tsp') return <TSPApp onBack={()=> setPage('landing')}/>
-  if (page=== 'knapsack') return <KnapsackApp onBack={()=> setPage('landing')}/>
-  if (page=== 'assignment') return <AssignmentApp onBack={()=> setPage('landing')}/>
-  return <Landing onSelect={setPage}/>
+
+  if (!backendReady) return <LoadingScreen seconds={seconds}/>
+  if (page=== "tsp") return <TSPApp onBack={()=> setPage("landing")}/>
+  if (page=== "knapsack") return <KnapsackApp onBack={()=> setPage("landing")}/>
+  if (page=== "assignment") return <AssignmentApp onBack={()=> setPage("landing")}/>
+  return <Landing onSelect={setPage} />
 }
